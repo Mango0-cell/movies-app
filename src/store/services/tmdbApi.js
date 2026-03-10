@@ -10,7 +10,7 @@ const tmdbBaseQuery = fetchBaseQuery({
     prepareHeaders: (headers) => {
         // prepareHeaders se ejecuta antes de CADA petición (como un interceptor de axios)
         // Lee el token desde las variables de entorno de Vite
-        const token = import.meta.env.VITE_TMDB_READ_TOKEN;
+        const token = import.meta.env.VITE_TMDB_KEY;
         if (token) {
             // Bearer token: esquema estándar OAuth 2.0 para autenticación HTTP
             headers.set('Authorization', `Bearer ${token}`);
@@ -101,59 +101,6 @@ export const tmdbApi = createApi({
         getGenres: builder.query({
             query: (type = 'movie') => `/genre/${type}/list`,
             transformResponse: (response) => response.genres,
-        }),
-
-        // Lista de favoritos — provee el tag 'FavoriteList' para invalidación
-        // Cuando una mutation invalida este tag, esta query se re-ejecuta automáticamente
-        getFavoriteList: builder.query({
-            query: (listId) => ({
-                url: `/list/${listId}`,
-            }),
-            // providesTags: le dice a RTK Query "esta query depende de FavoriteList"
-            // El id en el tag permite invalidar listas específicas (no todas)
-            providesTags: (result, error, listId) => [
-                { type: 'FavoriteList', id: listId },
-            ],
-        }),
-
-        // ═══════════════════════════════════════════════════════════════════
-        // MUTATIONS (POST/PUT/DELETE) — escritura de datos
-        // ═══════════════════════════════════════════════════════════════════
-
-        // Crear una nueva lista
-        createList: builder.mutation({
-            query: (body) => ({
-                url: '/list',
-                method: 'POST',
-                body, // { name: 'My List', description: '...' }
-            }),
-        }),
-
-        // Añadir película a una lista
-        // invalidatesTags: cuando esta mutation se completa exitosamente,
-        // RTK Query invalida el tag FavoriteList → la query getFavoriteList
-        // se re-ejecuta automáticamente → la UI se actualiza en tiempo real
-        addMovieToList: builder.mutation({
-            query: ({ listId, mediaId }) => ({
-                url: `/list/${listId}/add_item`,
-                method: 'POST',
-                body: { media_id: mediaId },
-            }),
-            invalidatesTags: (result, error, { listId }) => [
-                { type: 'FavoriteList', id: listId },
-            ],
-        }),
-
-        // Eliminar película de una lista
-        removeMovieFromList: builder.mutation({
-            query: ({ listId, mediaId }) => ({
-                url: `/list/${listId}/remove_item`,
-                method: 'POST',
-                body: { media_id: mediaId },
-            }),
-            invalidatesTags: (result, error, { listId }) => [
-                { type: 'FavoriteList', id: listId },
-            ],
         }),
     }),
 });

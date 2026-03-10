@@ -4,6 +4,7 @@
   NO recibe props. Las páginas se renderizan a través de <Outlet />.
 */
 import Sidebar from './Sidebar';
+import BottomNav from '../ui/BottomNav';
 import styles from './MainLayout.module.css';
 import { Outlet } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ const MainLayout = () => {
       <main className={styles.content} style={{ viewTransitionName: 'main-content' }}>
         <Outlet />
       </main>
+      <BottomNav />
     </div>
   );
 };

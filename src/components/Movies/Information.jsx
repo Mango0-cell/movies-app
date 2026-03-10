@@ -7,7 +7,7 @@ import { MovieCard } from '../ui/MovieCard';
 const Information = ({ movie }) => {
     const dispatch = useDispatch();
     const isFavorite = useSelector((state) => selectIsFavorite(state, movie?.id));
-    
+
     // Usamos popular movies como "recomendaciones" (excluyendo la película actual)
     const { data: popularMovies = [] } = useGetPopularMoviesQuery({ page: 1 });
     const recommendations = popularMovies.filter((m) => m.id !== movie?.id).slice(0, 10);
@@ -96,6 +96,8 @@ const Information = ({ movie }) => {
 
             <h1 className={styles.mainTitle}> Recommended </h1>
             <div className={styles.recommendedSection}>
+                <div className={styles.castListWrapper}>
+
                     <div className={styles.moviesList}>
                         {recommendations.map((rec) => (
                             <MovieCard
@@ -106,6 +108,7 @@ const Information = ({ movie }) => {
                     </div>
                 </div>
             </div>
+        </div>
     );
 };
 

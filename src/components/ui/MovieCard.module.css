@@ -1,0 +1,32 @@
+/*
+  MovieCard.module.css
+  Estilos de la tarjeta individual de película.
+*/
+
+.card {
+  border-radius: 8px;
+  overflow: hidden;         /* recorta la imagen en las esquinas */
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: scale(1.04);
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 2 / 3;    /* proporción estándar de póster de cine */
+  object-fit: cover;
+  display: block;
+}
+
+.title {
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
